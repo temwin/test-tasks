@@ -1,4 +1,4 @@
-const draggable = document.getElementById("draggable");
+const draggable = document.querySelector("#draggable");
 
 function center() {
   const ww = window.innerWidth;

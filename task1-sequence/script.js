@@ -1,22 +1,21 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const img = document.getElementById("sequence-image");
-  const counter = document.getElementById("frame-counter");
+  const img = document.querySelector("#sequence-image");
+  const counter = document.querySelector("#frame-counter");
   const totalFrames = 27;
 
   function updateFrameOnScroll() {
-    let scrollY = window.scrollY; /*сколько мы проскроллили*/
+    let scrollY = window.scrollY;
     let maxScroll =
       document.documentElement.scrollHeight -
-      window.innerHeight; /*Сколько можно проскроллить = вся страница минус один экран*/
+      window.innerHeight; 
     let scrollPercent =
       scrollY /
-      maxScroll; /*Находим процент того, сколько УЖЕ проскроллили от максимально возможного*/
+      maxScroll;
     let frameNumber = Math.max(
       1,
       Math.min(Math.floor(scrollPercent * totalFrames) + 1, totalFrames)
     );
 
-    /*генерация пути по шаблону*/
     img.src = `../assets/sequence/frame-${String(frameNumber).padStart(
       2,
       "0"
