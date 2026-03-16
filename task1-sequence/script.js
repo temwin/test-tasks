@@ -11,9 +11,9 @@ document.addEventListener("DOMContentLoaded", function () {
     let scrollPercent =
       scrollY /
       maxScroll; /*Находим процент того, сколько УЖЕ проскроллили от максимально возможного*/
-    let frameNumber = Math.min(
-      Math.floor(scrollPercent * totalFrames) + 1,
-      totalFrames
+    let frameNumber = Math.max(
+      1,
+      Math.min(Math.floor(scrollPercent * totalFrames) + 1, totalFrames)
     );
 
     /*генерация пути по шаблону*/
