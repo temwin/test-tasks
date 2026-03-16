@@ -40,3 +40,13 @@
 
 ```bash
 git clone https://github.com/temwin/test-tasks.git
+
+Перейти в папку проекта:
+cd test-tasks
+
+Запустить проект — открыть файл:
+index.html
+```
+
+## 🌐 Demo
+https://temwin.github.io/test-tasks/
