@@ -35,10 +35,8 @@
 - Git / GitHub Pages
 
 ## 🚀 Запуск проекта
-
-Клонировать репозиторий:
-
 ```bash
+Клонировать репозиторий:
 git clone https://github.com/temwin/test-tasks.git
 
 Перейти в папку проекта:
