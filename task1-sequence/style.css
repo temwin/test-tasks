@@ -24,15 +24,14 @@ body {
   align-items: center;
 }
 
-/* Центральная картинка */
-#sequence-image {
+.sequence-canvas {
   max-width: 90vw;
   max-height: 80vh;
   width: auto;
   height: auto;
-  object-fit: contain;
   border-radius: 20px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  display: block;
 }
 
 /* Счетчик */
