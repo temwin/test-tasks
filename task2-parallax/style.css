@@ -67,11 +67,6 @@ body {
   opacity: 1;
 }
 
-.slide.moving {
-  transition: transform 0.6s cubic-bezier(0.7, 0, 0.2, 1),
-    filter 0.6s cubic-bezier(0.7, 0, 0.2, 1), opacity 0.6s ease;
-}
-
 .slide > div {
   position: absolute;
   top: 0;
@@ -84,35 +79,6 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-.slide.exit-left {
-  transform: translateX(-100%);
-  filter: blur(20px);
-  z-index: 1;
-}
-
-.slide.exit-right {
-  transform: translateX(100%);
-  filter: blur(20px);
-  z-index: 1;
-}
-
-.slide.enter-right {
-  transform: translateX(100%);
-  filter: blur(20px);
-  z-index: 2;
-}
-
-.slide.enter-left {
-  transform: translateX(-100%);
-  filter: blur(20px);
-  z-index: 2;
-}
-
-.slide.enter-right.active,
-.slide.enter-left.active {
-  transform: translateX(0);
 }
 
 .nav-zone {
@@ -138,22 +104,41 @@ body {
   object-fit: cover;
 }
 
-.layer-cloud img {
+#webgl-canvas {
   position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.parallax-layer {
+  position: absolute;
+  z-index: 15;
+  pointer-events: none;
+}
+
+#cloud-layer {
   top: 15%;
   left: 40%;
+}
+
+#rainbow-layer {
+  top: 20%;
+  left: 50%;
+}
+
+.parallax-layer img {
+  position: absolute;
   transform: translate(-50%, -50%);
   width: auto;
   height: auto;
   max-width: 400px;
 }
 
-.layer-moon img {
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: auto;
-  height: auto;
-  max-width: 200px;
+#rainbow-layer img {
+  max-width: 800px;
 }

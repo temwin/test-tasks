@@ -13,23 +13,27 @@
       <p>Кликните слева или справа для переключения слайдов</p>
     </div>
     <div class="kv-container">
-      <!-- Слайд 1 (горы + облако) -->
+      <canvas id="webgl-canvas"></canvas>
+
+      <!-- Параллакс-слои -->
+      <div class="parallax-layer" id="cloud-layer">
+        <img src="../assets/images/task2/clouds.png" alt="cloud" />
+      </div>
+      <div class="parallax-layer" id="rainbow-layer">
+        <img src="../assets/images/task2/rainbow2.png" alt="rainbow" />
+      </div>
+
+      <!-- Слайд 1 (фон с горой) -->
       <div class="slide slide-1 active">
         <div class="layer-bg">
-          <img src="../assets/images/task2/горы.jpg" />
-        </div>
-        <div class="layer-cloud">
-          <img src="../assets/images/task2/облако.png" />
+          <img src="../assets/images/task2/slide1-bg1.jpeg" />
         </div>
       </div>
 
-      <!-- Слайд 2 (город + луна) -->
+      <!-- Слайд 2 (фон с городом) -->
       <div class="slide slide-2">
         <div class="layer-bg">
-          <img src="../assets/images/task2/город.jpg" />
-        </div>
-        <div class="layer-moon">
-          <img src="../assets/images/task2/луна.png" />
+          <img src="../assets/images/task2/slide2-bg-1.jpeg" />
         </div>
       </div>
 
@@ -37,6 +41,7 @@
       <div class="nav-zone nav-right"></div>
     </div>
 
+    <script src="webgl-transition.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

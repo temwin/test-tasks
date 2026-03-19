@@ -1,45 +1,58 @@
 const slides = document.querySelectorAll(".slide");
-
-const cloud = document.querySelector(".layer-cloud img");
-const moon = document.querySelector(".layer-moon img");
+const cloudLayer = document.querySelector("#cloud-layer");
+const rainbowLayer = document.querySelector("#rainbow-layer");
 const container = document.querySelector(".kv-container");
+const canvas = document.getElementById("webgl-canvas");
 
 let targetX = 0;
 let targetY = 0;
-
 let currentX = 0;
 let currentY = 0;
+
+const webgl = new WebGLTransition(canvas);
+
+webgl.loadImages([
+  "../assets/images/task2/slide1-bg1.jpeg",
+  "../assets/images/task2/slide2-bg-1.jpeg",
+]);
+
+// Параллакс
+let parallaxActive = true;
+let cloudMoveX = 0,
+  cloudMoveY = 0,
+  rainbowMoveX = 0,
+  rainbowMoveY = 0;
 
 container.addEventListener("mousemove", (e) => {
   const mouseX = e.clientX;
   const mouseY = e.clientY;
-
   const centerX = window.innerWidth / 2;
   const centerY = window.innerHeight / 2;
-
   targetX = (mouseX - centerX) / centerX;
   targetY = (mouseY - centerY) / centerY;
 });
 
-function animate() {
-  const ease = 0.03;
+function animateParallax() {
+  if (!parallaxActive) {
+    requestAnimationFrame(animateParallax);
+    return;
+  }
 
+  const ease = 0.03;
   currentX += (targetX - currentX) * ease;
   currentY += (targetY - currentY) * ease;
 
-  const cloudMoveX = currentX * -80;
-  const cloudMoveY = currentY * -60;
+  cloudMoveX = currentX * -80;
+  cloudMoveY = currentY * -60;
+  rainbowMoveX = currentX * -50;
+  rainbowMoveY = currentY * -40;
 
-  const moonMoveX = currentX * -50;
-  const moonMoveY = currentY * -40;
+  cloudLayer.style.transform = `translate(calc(-50% + ${cloudMoveX}px), calc(-50% + ${cloudMoveY}px))`;
+  rainbowLayer.style.transform = `translate(calc(-50% + ${rainbowMoveX}px), calc(-50% + ${rainbowMoveY}px))`;
 
-  cloud.style.transform = `translate(calc(-50% + ${cloudMoveX}px), calc(-50% + ${cloudMoveY}px))`;
-  moon.style.transform = `translate(calc(-50% + ${moonMoveX}px), calc(-50% + ${moonMoveY}px))`;
-
-  requestAnimationFrame(animate);
+  requestAnimationFrame(animateParallax);
 }
-
-animate();
+animateParallax();
 
 const leftZone = document.querySelector(".nav-left");
 const rightZone = document.querySelector(".nav-right");
@@ -47,57 +60,77 @@ const rightZone = document.querySelector(".nav-right");
 let currentIndex = 0;
 let isAnimating = false;
 
+cloudLayer.style.opacity = 1;
+rainbowLayer.style.opacity = 0;
+
 function showSlide(index, direction) {
   if (isAnimating) return;
   if (index === currentIndex) return;
 
   isAnimating = true;
+  parallaxActive = false;
 
-  const current = slides[currentIndex];
-  const next = slides[index];
+  cloudLayer.style.opacity = 1;
+  rainbowLayer.style.opacity = 1;
 
-  slides.forEach((s) => {
-    s.style.transform = "";
-    s.classList.remove("exit-left", "exit-right", "enter-left", "enter-right");
-  });
+  webgl.startTransition(
+    index,
+    direction,
+    () => {
+      slides.forEach((s) => s.classList.remove("active"));
+      slides[index].classList.add("active");
+      currentIndex = index;
+      isAnimating = false;
+      parallaxActive = true;
 
-  next.style.opacity = "1";
+      cloudLayer.style.opacity = index === 0 ? 1 : 0;
+      rainbowLayer.style.opacity = index === 1 ? 1 : 0;
+    },
+    (progress, dir) => {
+      const shift = dir * progress * window.innerWidth;
+      const shiftIn = -dir * (1 - progress) * window.innerWidth;
 
-  if (direction === "right") {
-    current.classList.add("exit-left");
-    next.classList.add("enter-right");
-  } else {
-    current.classList.add("exit-right");
-    next.classList.add("enter-left");
-  }
+      const minOpacity = 0.3;
+      const maxOpacity = 1.0;
 
-  current.classList.add("moving");
-  next.classList.add("moving");
-  next.classList.add("active");
+      const outOpacity = maxOpacity - (maxOpacity - minOpacity) * progress;
+      const inOpacity = minOpacity + (maxOpacity - minOpacity) * progress;
 
-  setTimeout(() => {
-    current.classList.remove("exit-left", "exit-right", "active");
-    next.classList.remove("enter-left", "enter-right");
+      if (currentIndex === 0) {
+        // Уходит облако
+        cloudLayer.style.transform = `translate(calc(-50% + ${
+          cloudMoveX + shift
+        }px), calc(-50% + ${cloudMoveY}px))`;
+        cloudLayer.style.opacity = outOpacity;
 
-    current.classList.remove("moving");
-    next.classList.remove("moving");
+        // Появляется радуга
+        rainbowLayer.style.transform = `translate(calc(-50% + ${
+          rainbowMoveX + shiftIn
+        }px), calc(-50% + ${rainbowMoveY}px))`;
+        rainbowLayer.style.opacity = inOpacity;
+      } else {
+        // Уходит радуга
+        rainbowLayer.style.transform = `translate(calc(-50% + ${
+          rainbowMoveX + shift
+        }px), calc(-50% + ${rainbowMoveY}px))`;
+        rainbowLayer.style.opacity = outOpacity;
 
-    current.style.transform = "";
-    next.style.transform = "";
-
-    current.style.opacity = "0";
-
-    currentIndex = index;
-    isAnimating = false;
-  }, 600);
+        // Появляется облако
+        cloudLayer.style.transform = `translate(calc(-50% + ${
+          cloudMoveX + shiftIn
+        }px), calc(-50% + ${cloudMoveY}px))`;
+        cloudLayer.style.opacity = inOpacity;
+      }
+    }
+  );
 }
 
 leftZone.addEventListener("click", () => {
-  let prevIndex = (currentIndex - 1 + slides.length) % slides.length;
+  const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
   showSlide(prevIndex, "left");
 });
 
 rightZone.addEventListener("click", () => {
-  let nextIndex = (currentIndex + 1) % slides.length;
+  const nextIndex = (currentIndex + 1) % slides.length;
   showSlide(nextIndex, "right");
 });
